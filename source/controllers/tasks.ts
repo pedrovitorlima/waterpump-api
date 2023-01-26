@@ -1,13 +1,13 @@
 import axios, { Axios, AxiosResponse } from "axios"
 import { Request, Response, NextFunction } from "express"
 
-interface Task {
+export interface Task {
     id: Number,
     duration: Number,
     is_processed: Boolean
 }
 
-const getTasks = (req: Request, res: Response, next: NextFunction) => {
+export const getTasks = (req: Request, res: Response, next: NextFunction) => {
     //TODO get from the database
 
     let tasks: Task[] = [{
@@ -17,8 +17,9 @@ const getTasks = (req: Request, res: Response, next: NextFunction) => {
     }]
 
     return res.status(200).json({
-        main: tasks
+        body: tasks
     })
+
 }
 
 const updateTasks = (req: Request, res: Response, next: NextFunction) => {
@@ -34,7 +35,7 @@ const updateTasks = (req: Request, res: Response, next: NextFunction) => {
     }
 
     return res.status(200).json({
-        main: task
+        body: task
     })   
 }
 
