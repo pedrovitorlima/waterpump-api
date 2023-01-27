@@ -1,5 +1,5 @@
 import { getTasks, Task } from './tasks'
-import { Request, Response, NextFunction } from "express"
+import { Request, Response } from "express"
 import pool from '../database/dbconfig';
 
 describe('The Water Pump task controllers', () => {
@@ -15,6 +15,8 @@ describe('The Water Pump task controllers', () => {
             rows: returnFromDb,
         });
     }
+
+    const emptyRequest = {  body: {} } as Request
 
     const queryShouldFail = () => {
         (pool as any).query.mockRejectedValue();
@@ -33,7 +35,7 @@ describe('The Water Pump task controllers', () => {
 
             var res = new ResponseMock()
             
-            await getTasks({  body: {} } as Request, res.mockResponse() as Response, jest.fn())
+            await getTasks(emptyRequest, res.mockResponse(), jest.fn())
 
             expect(res.responseObject.body).toEqual(tasks)
             expect((pool as any).release).toHaveBeenCalled()
@@ -45,7 +47,7 @@ describe('The Water Pump task controllers', () => {
             queryShouldFail()
             console.log = jest.fn();
 
-            await getTasks({ body: {} } as Request, new ResponseMock().mockResponse() as Response, jest.fn())
+            await getTasks(emptyRequest, new ResponseMock().mockResponse(), jest.fn())
 
             expect(console.log).toHaveBeenCalled();
         })
@@ -55,7 +57,7 @@ describe('The Water Pump task controllers', () => {
 class ResponseMock {
     declare responseObject: { body: {} }
 
-    mockResponse(): Partial<Response>  {
+    mockResponse(): Response  {
         const res: Partial<Response> = {
             json: jest.fn().mockImplementation((result) => {
                 this.responseObject = result
@@ -63,6 +65,6 @@ class ResponseMock {
             status: jest.fn().mockReturnThis(),
         };
 
-        return res
+        return res as Response
     }
 }
