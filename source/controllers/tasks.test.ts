@@ -22,7 +22,7 @@ describe('The Water Pump task controllers', () => {
         (pool as any).query.mockRejectedValue();
     }
 
-    describe('When getTask is called with tasks in the database', () => {
+    describe('When getTask is called with tasks in the database with no parameters', () => {
 
         it('should return the tasks', async () => {
             const tasks = [{
@@ -40,6 +40,26 @@ describe('The Water Pump task controllers', () => {
             expect(res.responseObject.body).toEqual(tasks)
             expect((pool as any).release).toHaveBeenCalled()
         })
+    })
+
+    describe('When getTask is called with tasks in the database and parameter pending filled', () => {
+
+        it ('should use specific query', async () => {
+            queryShouldReturn([])
+
+            var res = new ResponseMock()
+
+            const request = {
+                query: {}
+            }
+
+            request.query = {is_pending: false}
+
+            await getTasks(request as Request, res.mockResponse(), jest.fn())
+
+            expect((pool as any).query).toHaveBeenCalledWith('SELECT * FROM public.tasks WHERE is_pending = false')
+         })
+
     })
 
     describe('When an error happen while connecting to the database', () => {
