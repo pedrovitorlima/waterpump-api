@@ -8,7 +8,10 @@
     "build": "rm -rf build/ && prettier --write source/ && tsc",
     "test": "jest",
     "start-containers": "docker-compose --env-file .env up -d",
-    "stop-containers":  "docker-compose down"
+    "stop-containers":  "docker-compose down",
+    "create-migration":  "db-migrate create initialize --sql-file",
+    "run-migrations": "db-migrate up",
+    "rollback-migrations": "db-migrate down"
   },
   "repository": {
     "type": "git",
