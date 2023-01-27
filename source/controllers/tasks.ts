@@ -14,10 +14,12 @@ export const getTasks = async (req: Request, res: Response, next: NextFunction) 
 
     const sql = "SELECT * FROM public.tasks"
     var all
-    await client.query(sql).then((dbResponse) => {
-        all = dbResponse.rows
-    }).catch(e => console.error(e)).
-    then(() => client.release())
+    await client.query(sql)
+        .then((dbResponse) => {
+            all = dbResponse.rows
+        })
+        .catch(e => console.error(e))
+        .then(() => client.release())
 
     return res.status(200).json({
         body: all

@@ -27,35 +27,23 @@ describe('The Water Pump task controllers', () => {
             }] as Task[]
 
             queryShouldReturn(tasks)
+
+            var res = new ResponseMock()
             
-            var responseObject = { body: {} }
+            await getTasks({  body: {} } as Request, res.mockResponse() as Response, jest.fn())
 
-            const res: Partial<Response> = {
-                json: jest.fn().mockImplementation((result) => {
-                    responseObject = result
-                }),
-                status: jest.fn().mockReturnThis(),
-              };
-          
-            const mockNext: NextFunction = jest.fn();
-
-            const req = {  body: {} }
-            await getTasks(req as Request, res as Response, mockNext)
-
-            expect(responseObject.body).toEqual(tasks)
+            expect(res.responseObject.body).toEqual(tasks)
         })
     })
 })
 
 class ResponseMock {
-    declare responseObject: Partial<Response>
+    declare responseObject: { body: {} }
 
     mockResponse(): Partial<Response>  {
-        var responseObject: Partial<Response>
-
         const res: Partial<Response> = {
             json: jest.fn().mockImplementation((result) => {
-                responseObject = result
+                this.responseObject = result
             }),
             status: jest.fn().mockReturnThis(),
         };
