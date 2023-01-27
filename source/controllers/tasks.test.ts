@@ -4,22 +4,25 @@ import pool from '../database/dbconfig';
 
 describe('The Water Pump task controllers', () => {
 
+    beforeEach(() => {
+        (pool as any).connect = jest.fn().mockReturnThis();
+        (pool as any).query = jest.fn().mockReturnThis();
+        (pool as any).release = jest.fn().mockReturnThis();
+    })
+
+    const queryShouldReturn = (returnFromDb: any) => {
+        (pool as any).query.mockResolvedValueOnce({
+            rows: returnFromDb,
+        });
+    }
+
+    const queryShouldFail = () => {
+        (pool as any).query.mockRejectedValue();
+    }
+
     describe('When getTask is called with tasks in the database', () => {
 
-        beforeAll(() => {
-            (pool as any).connect = jest.fn().mockReturnThis();
-            (pool as any).query = jest.fn().mockReturnThis();
-            (pool as any).release = jest.fn().mockReturnThis();
-        })
-
-        const queryShouldReturn = (returnFromDb: any) => {
-            (pool as any).query.mockResolvedValueOnce({
-                rows: returnFromDb,
-            });
-        }
-
         it('should return the tasks', async () => {
-
             const tasks = [{
                 id: 0,
                 duration: 1.0,
@@ -33,6 +36,18 @@ describe('The Water Pump task controllers', () => {
             await getTasks({  body: {} } as Request, res.mockResponse() as Response, jest.fn())
 
             expect(res.responseObject.body).toEqual(tasks)
+            expect((pool as any).release).toHaveBeenCalled()
+        })
+    })
+
+    describe('When an error happen while connecting to the database', () => {
+        it ('should log the error', async () => {
+            queryShouldFail()
+            console.log = jest.fn();
+
+            await getTasks({ body: {} } as Request, new ResponseMock().mockResponse() as Response, jest.fn())
+
+            expect(console.log).toHaveBeenCalled();
         })
     })
 })
