@@ -53,11 +53,11 @@ describe('The Water Pump task controllers', () => {
                 query: {}
             }
 
-            request.query = {is_pending: false}
+            request.query = {is_processed: false}
 
             await getTasks(request as Request, res.mockResponse(), jest.fn())
 
-            expect((pool as any).query).toHaveBeenCalledWith('SELECT * FROM public.tasks WHERE is_pending = false')
+            expect((pool as any).query).toHaveBeenCalledWith('SELECT * FROM public.tasks WHERE is_processed = false')
          })
 
     })

@@ -12,12 +12,12 @@ export const getTasks = async (req: Request, res: Response, next: NextFunction) 
     console.log("Connecting with the pull of connections...")
     const client = await pool.connect();
 
-    const isPending = req.query.is_pending
+    const isProcessed = req.query.is_processed
 
     var sql = "SELECT * FROM public.tasks"
 
-    if (isPending != null) {
-        sql = "SELECT * FROM public.tasks WHERE is_pending = " + isPending
+    if (isProcessed != null) {
+        sql = "SELECT * FROM public.tasks WHERE is_processed = " + isProcessed
     }
 
     var all
