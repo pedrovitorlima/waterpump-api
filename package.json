@@ -8,8 +8,8 @@
     "build": "rm -rf build/ && prettier --write source/ && tsc",
     "test": "jest",
     "start-containers": "docker-compose --env-file .env up -d",
-    "stop-containers":  "docker-compose down",
-    "create-migration":  "db-migrate create initialize --sql-file",
+    "stop-containers": "docker-compose down",
+    "create-migration": "db-migrate create initialize --sql-file",
     "run-migrations": "db-migrate up",
     "rollback-migrations": "db-migrate down"
   },
@@ -45,6 +45,7 @@
     "@types/pg": "^8.6.6",
     "babel-jest": "^29.4.0",
     "jest": "^29.4.0",
+    "sinon": "^15.0.1",
     "ts-jest": "^29.0.5"
   }
 }

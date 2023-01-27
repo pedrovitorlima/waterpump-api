@@ -2,9 +2,7 @@ import http from 'http'
 import express, { Express } from 'express'
 import routes from './routes/tasks'
 import morgan from 'morgan'
-import dotenv from 'dotenv'
-
-dotenv.config()
+import 'dotenv/config'
 
 const router: Express = express()
 

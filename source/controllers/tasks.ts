@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosResponse } from "axios"
+import pool from '../database/dbconfig';
 import { Request, Response, NextFunction } from "express"
 
 export interface Task {
@@ -7,17 +7,20 @@ export interface Task {
     is_processed: Boolean
 }
 
-export const getTasks = (req: Request, res: Response, next: NextFunction) => {
-    //TODO get from the database
+export const getTasks = async (req: Request, res: Response, next: NextFunction) => {
 
-    let tasks: Task[] = [{
-        id: 0,
-        duration: 1.0,
-        is_processed: false
-    }]
+    console.log("Connecting with the pull of connections...")
+    const client = await pool.connect();
+
+    const sql = "SELECT * FROM public.tasks"
+    var all
+    await client.query(sql).then((dbResponse) => {
+        all = dbResponse.rows
+    }).catch(e => console.error(e)).
+    then(() => client.release())
 
     return res.status(200).json({
-        body: tasks
+        body: all
     })
 
 }
