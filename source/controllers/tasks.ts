@@ -44,14 +44,20 @@ export const getTasks = async (req: Request, res: Response, next: NextFunction) 
     })
 }  
 
-const updateTasks = (req: Request, res: Response, next: NextFunction) => {
-    let id = req.params.id
+export const updateTasks = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.query.id
     
+    if (id == null) {
+        res.status(401).json({
+            error: ""
+        })
+    }
+
     //TODO fetch from database based on id and status
     //TODO if not found, bad request
 
     let task: Task = {
-        id: +id,
+        id: Number(id),
         duration: 1.0,
         is_processed: true
     }
