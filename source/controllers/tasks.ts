@@ -46,24 +46,21 @@ export const getTasks = async (req: Request, res: Response, next: NextFunction) 
 
 export const updateTasks = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.query.id
-    
-    if (id == null) {
-        res.status(401).json({
-            error: ""
-        })
-    }
+    const isProcessed = req.query.is_processed
 
-    //TODO fetch from database based on id and status
-    //TODO if not found, bad request
+    const client = await pool.connect();
 
-    let task: Task = {
-        id: Number(id),
-        duration: 1.0,
-        is_processed: true
-    }
+
+    const sql = "UPDATE public.tasks SET is_processed = " + isProcessed + ' WHERE id = ' + id
+
+    await client.query(sql)
+        .catch(e => console.error(e))
+        .then(() => client.release())
+
+    //todo query the database to return updated task
 
     return res.status(200).json({
-        body: task
+        body: {}
     })   
 }
 

@@ -96,14 +96,6 @@ describe('The Water Pump task controllers', () => {
     describe('The POST /task endpoint', () => {
         describe('when the request is valid', () => {
             test('then it should return a 200', async () => {
-                // const tasks = [{
-                //     id: 0,
-                //     duration: 1.0,
-                //     is_processed: false
-                // }] as Task[]
-
-                // queryShouldReturn(tasks)
-
                 var res = new ResponseMock()
 
                 const request = {
@@ -115,6 +107,23 @@ describe('The Water Pump task controllers', () => {
                 await updateTasks(request as Request, res.mockResponse(), jest.fn())
 
                 expect(res.statusCode).toBe(200)
+            })
+
+            test('then it should update is_processed to true', async () => {
+                var res = new ResponseMock()
+                const expectedQuery = "UPDATE public.tasks SET is_processed = true WHERE id = 1"
+
+                queryShouldReturn({})
+
+                const request = {
+                    query: {}
+                }
+        
+                request.query = {id: 1, is_processed: true}
+                
+                await updateTasks(request as Request, res.mockResponse(), jest.fn())
+
+                expect((pool as any).query).toHaveBeenCalledWith(expectedQuery)
             })
         })
     })
